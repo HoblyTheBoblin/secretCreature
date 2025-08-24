@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Secret Creature</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      padding-top: 50px;
+    }
+
+    /* Smaller creature */
+    #creature {
+      width: 120px;       /* smaller than before */
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    #creature:hover {
+      transform: scale(1.2) rotate(10deg);
+    }
+
+    #secret {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #555;
+    }
+
+    /* Input and buttons */
+    #userSecret, #addSecret, #newSecret {
+      margin-top: 15px;
+      padding: 8px 12px;
+      font-size: 16px;
+    }
+
+    #addSecret, #newSecret {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Creature -->
+  <img id="creature" src="creature.png" alt="Secret Creature">
+
+  <!-- Secret display -->
+  <div id="secret">Click the creature or button to reveal a secret!</div>
+
+  <!-- User adds new secret -->
+  <br>
+  <input type="text" id="userSecret" placeholder="Write your secret here">
+  <button id="addSecret">Add Secret</button>
+
+  <!-- Button to generate new secret -->
+  <br>
+  <button id="newSecret">Reveal New Secret</button>
+
+  <script>
+    // Load saved secrets from LocalStorage
+    const savedSecrets = JSON.parse(localStorage.getItem("secrets")) || [];
+    const secrets = [
+      "I love moonlight!",
+      "I hide treasure under rocks.",
+      "I can breathe tiny flames!",
+      "I enjoy singing at night.",
+      ...savedSecrets
+    ];
+
+    const creature = document.getElementById("creature");
+    const secretDiv = document.getElementById("secret");
+    const userInput = document.getElementById("userSecret");
+    const addButton = document.getElementById("addSecret");
+    const newSecretBtn = document.getElementById("newSecret");
+
+    // Function to reveal a random secret
+    function revealSecret() {
+      const randomSecret = secrets[Math.floor(Math.random() * secrets.length)];
+      secretDiv.textContent = randomSecret;
+    }
+
+    // Click creature to reveal secret
+    creature.addEventListener("click", revealSecret);
+
+    // Click button to reveal new secret
+    newSecretBtn.addEventListener("click", revealSecret);
+
+    // Add user secret
+    addButton.addEventListener("click", () => {
+      const secret = userInput.value.trim();
+      if(secret){
+        secrets.push(secret);
+        savedSecrets.push(secret);
+        localStorage.setItem("secrets", JSON.stringify(savedSecrets));
+        userInput.value = "";
+        alert("Your secret has been added!");
+      }
+    });
+  </script>
+
+</body>
+</html>
